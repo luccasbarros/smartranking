@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { CreatePlayerDTO } from './dtos/create-player.dto';
-import { PlayersService } from 'src/players/players.service';
 import { IPlayer } from './interfaces/jogador.interface';
+import { PlayersService } from './players.service';
 
 @Controller('api/v1/jogadores')
 export class JogadoresController {
