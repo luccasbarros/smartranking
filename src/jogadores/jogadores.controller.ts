@@ -1,13 +1,31 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { CreatePlayerDTO } from './dtos/create-player.dto';
+import { IPlayer } from './interfaces/jogador.interface';
+import { PlayersService } from './players.service';
 
 @Controller('api/v1/jogadores')
 export class JogadoresController {
+  constructor(private readonly playersService: PlayersService) {}
+
   @Post()
-  async criarAtualizarJogador(@Body() createPlayerDto: CreatePlayerDTO) {
-    const { email } = createPlayerDto;
-    return JSON.stringify({
-      name: email,
-    });
+  async createUpdatePlayer(@Body() createPlayerDto: CreatePlayerDTO) {
+    await this.playersService.createUpdatePlayer(createPlayerDto);
+  }
+
+  @Get()
+  async listPlayers(
+    @Query('email') email: string,
+  ): Promise<IPlayer[] | IPlayer> {
+    if (email) {
+      const player = await this.playersService.listPlayerByEmail(email);
+      return player;
+    } else {
+      return this.playersService.listAllPlayers();
+    }
+  }
+
+  @Delete()
+  async deletePlayer(@Query('email') email: string): Promise<void> {
+    await this.playersService.deletePlayer(email);
   }
 }

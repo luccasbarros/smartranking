@@ -1,5 +1,6 @@
-export interface IJogador {
-  readonly _id: string;
+import { Document } from 'mongoose';
+
+export interface IPlayer extends Document {
   readonly phoneNumber: string;
   readonly email: string;
   name: string;
