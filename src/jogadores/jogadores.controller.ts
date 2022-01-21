@@ -3,12 +3,15 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
+  Put,
   Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { CreatePlayerDTO } from './dtos/create-player.dto';
+import { UpdatePlayerDTO } from './dtos/update-player-dto';
 import { IPlayer } from './interfaces/jogador.interface';
 import { PlayersValidationParamsPipe } from './pipes/players-validation-params.pipe';
 import { PlayersService } from './players.service';
@@ -19,26 +22,37 @@ export class JogadoresController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  async createUpdatePlayer(@Body() createPlayerDto: CreatePlayerDTO) {
-    await this.playersService.createUpdatePlayer(createPlayerDto);
+  async createPlayer(
+    @Body() createPlayerDto: CreatePlayerDTO,
+  ): Promise<IPlayer> {
+    const player = await this.playersService.create(createPlayerDto);
+    return player;
+  }
+
+  @Put('/:_id')
+  @UsePipes(ValidationPipe)
+  async updatePlayer(
+    @Body() createPlayerDto: UpdatePlayerDTO,
+    @Param('_id') id: string,
+  ): Promise<void> {
+    await this.playersService.update(createPlayerDto, id);
   }
 
   @Get()
-  async listPlayers(
-    @Query('email') email: string,
-  ): Promise<IPlayer[] | IPlayer> {
-    if (email) {
-      const player = await this.playersService.listPlayerByEmail(email);
-      return player;
-    } else {
-      return this.playersService.listAllPlayers();
-    }
+  async listPlayers(): Promise<IPlayer[] | IPlayer> {
+    return this.playersService.listAllPlayers();
   }
 
-  @Delete()
+  @Get('/:_id')
+  async listPlayerById(@Param('_id') id: string): Promise<IPlayer> {
+    const player = await this.playersService.listPlayerById(id);
+    return player;
+  }
+
+  @Delete('/:_id')
   async deletePlayer(
-    @Query('email', PlayersValidationParamsPipe) email: string,
+    @Param('_id', PlayersValidationParamsPipe) id: string,
   ): Promise<void> {
-    await this.playersService.deletePlayer(email);
+    await this.playersService.deletePlayer(id);
   }
 }
