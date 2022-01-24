@@ -38,10 +38,16 @@ export class CategoriesController {
   }
 
   @Put('/:category')
+  @UsePipes(ValidationPipe)
   async updateCategory(
     @Body() updateCategoryDTO: UpdateCategoryDTO,
     @Param('category') category: string,
   ): Promise<void> {
     await this.categoriesService.update(category, updateCategoryDTO);
+  }
+
+  @Post('/:category/players/:playerId')
+  async insertCategoryOnPlayer(@Param() params: string[]): Promise<void> {
+    return await this.categoriesService.insertCategoryOnPlayer(params);
   }
 }
