@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { IPlayer } from 'src/jogadores/interfaces/jogador.interface';
 import { PlayersService } from 'src/jogadores/players.service';
 import { CreateCategoryDTO } from './dtos/create-category.dto';
 import { UpdateCategoryDTO } from './dtos/update-category.dto';
@@ -43,6 +44,18 @@ export class CategoriesService {
     }
 
     return categoryExist;
+  }
+
+  async getCategoryByChallengerId(_id: string): Promise<Category> {
+    const players = await this.playersService.listPlayerById(_id);
+
+    const category = await this.categoryModel
+      .findOne()
+      .where('players')
+      .in(players._id)
+      .exec();
+
+    return category;
   }
 
   async update(

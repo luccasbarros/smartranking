@@ -50,4 +50,9 @@ export class CategoriesController {
   async insertCategoryOnPlayer(@Param() params: string[]): Promise<void> {
     return await this.categoriesService.insertCategoryOnPlayer(params);
   }
+
+  @Get('/player/:playerId')
+  async findPlayerCategory(@Param('playerId') playerId: string): Promise<any> {
+    return await this.categoriesService.getCategoryByChallengerId(playerId);
+  }
 }
