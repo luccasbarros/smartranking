@@ -61,6 +61,8 @@ export class ChallengesService {
       );
     }
 
+    console.log('alteração recente');
+
     // create challenge
 
     const createChallenge = new this.challengeModel(createChallengeDTO);
